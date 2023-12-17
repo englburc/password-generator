@@ -125,122 +125,110 @@ function getPasswordOptions() {
   let useUpperLetters = prompt(`Would you like UPPER case letters to be used when generating your password? - Yes or No\n`);
   if (useUpperLetters.toLowerCase() === USER_CHOICE_YES) {
     passwordOptions.set("upperLettersUsed", true);
-    console.log(`upperLettersUsed set to ${passwordOptions.get("upperLettersUsed")}`)
   } else {
     passwordOptions.set("upperLettersUsed", false);
-    console.log(`upperLettersUsed set to ${passwordOptions.get("upperLettersUsed")}`)
   }
 
   //user choses whether wants lower case or not
-  let useLowerLetters = prompt(`Would you like lower case letters to be used when generating your password? - Y or N\n`);
+  let useLowerLetters = prompt(`Would you like lower case letters to be used when generating your password? - Yes or No\n`);
   if (useLowerLetters.toLowerCase() === USER_CHOICE_YES) {
     passwordOptions.set("lowerLettersUsed", true)
-    console.log(`lowerLettersUsed case set to ${passwordOptions.get("lowerLettersUsed")}`)
   } else {
     passwordOptions.set("lowerLettersUsed", false)
-    console.log(`lowerLettersUsed case set to ${passwordOptions.get("lowerLettersUsed")}`)
+
   }
 
   //user choses whether wants special characters or not
-  let useSpecialCharacters = prompt(`Would you like special characters to be used when generating your password? - Y or N\n`);
+  let useSpecialCharacters = prompt(`Would you like special characters to be used when generating your password? - Yes or No\n`);
   if (useSpecialCharacters.toLowerCase() === USER_CHOICE_YES) {
     passwordOptions.set("specialCharactersUsed", true)
-    console.log(`specialCharactersUsed set to ${passwordOptions.get("specialCharactersUsed")}`)
   } else {
     passwordOptions.set("specialCharactersUsed", false)
-    console.log(`specialCharactersUsed set to ${passwordOptions.get("specialCharactersUsed")}`)
   }
   //user choses whether wants NUMERICAL characters or not
-  let useNumericCharacters = prompt(`Would you like numeric characters to be used when generating your password? - Y or N\n`);
+  let useNumericCharacters = prompt(`Would you like numeric characters to be used when generating your password? - Yes or No\n`);
   if (useSpecialCharacters.toLowerCase() === USER_CHOICE_YES) {
     passwordOptions.set("numericCharactersUsed", true)
-    console.log(`numericCharactersUsed set to ${passwordOptions.get("numericCharactersUsed")}`)
   } else {
     passwordOptions.set("numericCharactersUsed", false)
-    console.log(`numericCharactersUsed set to ${passwordOptions.get("numericCharactersUsed")}`)
   }
 
   return passwordOptions;
 
 }
 
+//make string for password
+function changeArrayToString(randomChars) {
+  let randomCharsStr = randomChars.join('')
+  randomCharsStrNoCommas = randomCharsStr.split(",").join("")
+  return randomCharsStrNoCommas
+}
+
 // Function for getting a random element from an array
 function get_Random(passwordOptions) {
-  // const passwordOptions = getPasswordOptions();
   let randomChars = [];
   let passwordLength = passwordOptions.get("passwordLength")
-  let randomCharsStr = ""
   let randomCharsStrNoCommasCorrectLength = ""
+  let optionsChosen = 0;
+  let randomCharsUpper = []
+  if (passwordOptions.get("upperLettersUsed")) {
+    optionsChosen += 1;
+    randomCharsUpper = shuffle(upperCasedCharacters);
+    console.log(`randomCharsUpper: ${randomCharsUpper}`);
 
-  // user wants UPPER letters is true
-  console.log(`wants UPPER: ${passwordOptions.get("upperLettersUsed")}`)
-  if (passwordOptions.get("upperLettersUsed") == true ||
-    passwordOptions.get("lowerLettersUsed") == true ||
-    passwordOptions.get("specialCharactersUsed") == true ||
-    passwordOptions.get("numericCharactersUsed") == true) {
-    if (passwordOptions.get("upperLettersUsed")) {
-      let upLetters = shuffle(upperCasedCharacters);
-      // console.log(`upLetters: ${upLetters}`);
-      randomChars.push(upLetters);
-      console.log(`randomChars: ${randomChars}`);
-      randomCharsStr = randomChars.join("");
-      randomCharsStrNoCommas = randomCharsStr.split(",").join("")
-      randomCharsStrNoCommasCorrectLength = randomCharsStrNoCommas.substring(0, passwordLength)
+  }
+  let randomCharsLower = []
+  if (passwordOptions.get("lowerLettersUsed")) {
+    optionsChosen += 1;
+    randomCharsLower = shuffle(lowerCasedCharacters);
+    console.log(`randomCharsLower: ${randomCharsLower}`);
 
-      console.log(`upper randomCharsStrNoCommasCorrectLength: ${randomCharsStrNoCommasCorrectLength}`)
-    }
-    if (passwordOptions.get("lowerLettersUsed")) {
-      let lowerLetters = shuffle(lowerCasedCharacters);
-      console.log(`lowerCasedCharacters: ${lowerLetters}`);
-      randomChars.push(lowerLetters);
-      randomChars = shuffle(randomChars);
-      console.log(`lowerCasedCharacters randomChars: ${randomChars}`);
-      randomCharsStr = randomChars.join("")
-      randomCharsStrNoCommas = randomCharsStr.split(",").join("")
-      randomCharsStrNoCommasCorrectLength = randomCharsStrNoCommas.substring(0, passwordLength)
-      console.log(`lower randomCharsStrNoCommasCorrectLength: ${randomCharsStrNoCommasCorrectLength}`)
-
-    }
-    if (passwordOptions.get("specialCharactersUsed")) {
-      let specialChars = shuffle(specialCharacters);
-      console.log(`specialCharacters: ${specialChars}`)
-      randomChars.push(specialChars);
-      console.log(`randomChars: ${randomChars}`);
-      randomCharsStr = randomChars.join("")
-      randomCharsStrNoCommas = randomCharsStr.split(",").join("")
-      randomCharsStrNoCommasCorrectLength = randomCharsStrNoCommas.substring(0, passwordLength)
-      console.log(`special randomCharsStrNoCommasCorrectLength: ${randomCharsStrNoCommasCorrectLength}`)
-
-
-    }
-    if (passwordOptions.get("numericCharactersUsed")) {
-      let numChars = shuffle(numericCharacters)
-      console.log(`numericCharacters: ${numChars}`)
-      randomChars.push(numChars);
-      console.log(`randomChars: ${randomChars}`);
-      randomCharsStr = randomChars.join('')
-      randomCharsStrNoCommas = randomCharsStr.split(",").join("")
-      randomCharsStrNoCommasCorrectLength = randomCharsStrNoCommas.substring(0, passwordLength)
-      console.log(`numeric randomCharsStrNoCommasCorrectLength: ${randomCharsStrNoCommasCorrectLength}`)
-
-    }
-  } else {
-    alert(`You have not chosen any type of characters for generating the password - CRAZY !`)
+  }
+  let randomCharsSpecial = []
+  if (passwordOptions.get("specialCharactersUsed")) {
+    optionsChosen += 1;
+    randomCharsSpecial = shuffle(specialCharacters);
+    console.log(`randomCharsSpecial: ${randomCharsSpecial}`)
+  }
+  let randomCharsNumeric = []
+  if (passwordOptions.get("numericCharactersUsed")) {
+    optionsChosen += 1;
+    randomCharsNumeric = shuffle(numericCharacters)
+    console.log(`randomCharsNumeric: ${randomCharsNumeric}`)
   }
 
-  console.log(`randomCharsStrNoCommasCorrectLength: ${randomCharsStrNoCommasCorrectLength}`)
-  console.log(`typeof(randomCharsStrNoCommasCorrectLength): ${typeof (randomCharsStrNoCommasCorrectLength)}`)
-  return randomCharsStrNoCommasCorrectLength;
+  if (optionsChosen === 0) {
+    alert(`You have not chosen any type of characters for generating the password - CRAZY !`)
+  } else {
+    //how many chars for each chosen option
+    let numCharsEachOption = passwordLength / optionsChosen
+
+    let randomCharsUpperTruncated = correctLength(randomCharsUpper, numCharsEachOption)
+    let randomCharsLowerTruncated = correctLength(randomCharsLower, numCharsEachOption)
+    let randomCharsSpecialTruncated = correctLength(randomCharsSpecial, numCharsEachOption)
+    let randomCharsNumericTruncated = correctLength(randomCharsNumeric, numCharsEachOption)
+
+    randomChars.push(randomCharsUpperTruncated);
+    randomChars.push(randomCharsLowerTruncated);
+    randomChars.push(randomCharsSpecialTruncated);
+    randomChars.push(randomCharsNumericTruncated);
+
+    let randomCharsShuffled = shuffle(randomChars);
+    let randomCharsStrNoCommas = changeArrayToString(randomCharsShuffled)
+    //truncate string to user chosen password length
+    randomCharsStrNoCommasCorrectLength = randomCharsStrNoCommas.substring(0, passwordLength)
+
+    return randomCharsStrNoCommasCorrectLength;
+  }
+
 }
+
+
+
 
 function correctLength(shuffledRandChars, correctLength) {
   let passwordCorrectLength = []
-  console.log(`shuffledRandChars.length: ${shuffledRandChars.length}`)
-  console.log(`correctLength: ${correctLength}`)
-  if (shuffledRandChars.length > correctLength) {
-    console.log(`correcting length of password from ${shuffledRandChars.length} to ${correctLength} `)
-    passwordCorrectLength = shuffledRandChars.slice(0, correctLength + 1);
-  }
+  passwordCorrectLength = shuffledRandChars.slice(0, correctLength);
   return passwordCorrectLength
 }
 
@@ -279,21 +267,6 @@ function writePassword() {
 
 // Add event listener to generate button
 generateBtn.addEventListener('click', writePassword);
-
-/*
-Generate a password when the button is clicked
-Present a series of prompts for password criteria
-!Length of password
-At least 8 characters but no more than 128.
-Character types
-!Lowercase
-!Uppercase
-!Numeric
-!Special characters ($@%&*, etc)
-!Code should validate for each input and at least one character type should be selected
-Once prompts are answered then the password should be generated and 
-displayed in an alert or written to the page
-*/
 
 
 
